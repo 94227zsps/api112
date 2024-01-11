@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>社會科成績查詢系統</title>
+    <style>
+        @font-face {
+          font-family: 'jf-openhuninn-2.0';
+          src: url('jf-openhuninn-2.0.ttf') format('truetype');
+        }
+    
+        body {
+          font-family: 'jf-openhuninn-2.0', Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+        .card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      width: 70%;
+      text-align: center;
+      background-color: #f9f9f9;
+        }
+    </style>
+        <h1>社會科成績查詢系統</h1>
+        <div class="card">
+        <ul>
+            <h3>其他社會科連結</h3>
+          <a href="index.html" style="color: #000000;">社會科課堂積分</a><br>
+          <a href="point.html" style="color: #000000;">社會科重點及學習單下載區</a><br>
+          <a href="travel.html" style="color: #000000;">社會科推薦家庭假日旅遊地點</a><br>
+          <a href="#" style="color: #000000;">社會科簿本繳交狀況</a>
+        </ul>
+        </div>
+</head>
+<body>
+    <label for="codeInput">請輸入學生編號<br>
+        (編號為學生座號+生日)<br>
+        例如501010910</label><br>
+    <input type="text" id="codeInput">
+    <button onclick="searchCode()">搜尋</button>
+
+    <div id="results"></div>
+
+    <script>
+        function searchCode() {
+            const userInput = document.getElementById('codeInput').value;
+            fetch('500.csv')
+                .then(response => response.text())
+                .then(data => {
+                    const rows = data.trim().split('\n');
+                    let found = false;
+
+                    rows.forEach((row, index) => {
+                        if (index === 0) {
+                            // Skip header row
+                            return;
+                        }
+
+                        const columns = row.split(',');
+                        const code = columns[0].trim(); // Assuming code is in the first column
+
+                        if (code === userInput) {
+                            found = true;
+                            displayResult(columns);
+                        }
+                    });
+
+                    if (!found) {
+                        document.getElementById('results').innerHTML = '沒有找到匹配的代碼。';
+                    }
+                })
+                .catch(error => console.log('出現錯誤：', error));
+        }
+
+        function displayResult(columns) {
+            const resultDiv = document.getElementById('results');
+            resultDiv.innerHTML = ''; // Clear previous results
+
+            const resultList = document.createElement('ul');
+
+            columns.forEach(column => {
+                const listItem = document.createElement('li');
+                listItem.textContent = column;
+                resultList.appendChild(listItem);
+            });
+
+            resultDiv.appendChild(resultList);
+        }
+    </script>
+</body>
+</html>

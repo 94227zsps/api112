@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>社會科課堂積分</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    @font-face {
+      font-family: 'jf-openhuninn-2.0';
+      src: url('jf-openhuninn-2.0.ttf') format('truetype');
+    }
+    body {
+      font-family: 'jf-openhuninn-2.0', Arial, sans-serif; /* 設置字體 */
+      background-color: #f4f4f4; /* 設置背景色 */
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      margin: 10px;
+      background-color: rgb(238, 227, 191);
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 添加陰影效果 */
+      width: 300px;
+      display: inline-block;
+    }
+    .card p {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+    }
+    .card p img {
+      margin-right: 10px;
+      width: 60px; /* 調整圖片大小 */
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>社會科課堂積分公告</h1>
+  <nav>
+    <ul>
+      <li><a href="travel.html">社會科推薦家庭出遊地點</a></li>
+      <li><a href="score.html">期中期末考分數公告</a></li>
+      <li><a href="#">社會科簿本繳交狀況</a></li>
+      <li><a href="point.html">社會科重點及學習單下載區</a></li>
+      <!-- 添加下拉選單 -->
+      <li>
+        <label for="csvSelector">選擇班級：</label>
+        <select id="csvSelector">
+          <option value="501.csv">501</option>
+          <option value="502.csv">502</option>
+          <option value="503.csv">503</option>
+          <!-- 您可以根據需要添加更多的選項 -->
+        </select>
+      </li>
+    </ul>
+  </nav>
+  <div id="csvData">
+    <!-- 數據將會以卡片形式顯示在這裡 -->
+  </div>
+
+  <script>
+    // 添加下拉選單變更事件
+    document.getElementById('csvSelector').addEventListener('change', function() {
+      const selectedCsv = this.value;
+      loadCsv(selectedCsv);
+    });
+
+    function loadCsv(csvFileName) {
+      fetch(csvFileName)
+        .then(response => response.text())
+        .then(data => {
+          const csvDataElement = document.getElementById('csvData');
+          csvDataElement.innerHTML = ''; // 清空先前的資料
+
+          const rows = data.trim().split('\n');
+          rows.forEach(row => {
+            const columns = row.split(',');
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            columns.forEach((column, index) => {
+              const cardText = document.createElement('p');
+              const cardImg = document.createElement('img');
+              cardImg.src = `info${index + 1}.png`; // 更換為您的圖片路徑
+              cardImg.alt = `Info Icon ${index + 1}`; // 圖片提示信息
+              cardImg.width = 100; // 設置圖片寬度
+              cardImg.height = 100; // 設置圖片高度
+              cardText.textContent = column.trim();
+              cardText.prepend(cardImg); // 將圖片添加到文字前方
+              card.appendChild(cardText);
+            });
+
+            csvDataElement.appendChild(card);
+          });
+        })
+        .catch(error => console.log('出現錯誤：', error));
+    }
+
+    // 初始化載入預設的 CSV（可以根據需要更改預設值）
+    loadCsv('501.csv');
+  </script>
+</body>
+</html>

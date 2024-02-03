@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>網站轉跳</title>
+    <style>
+        /* 添加一些基本的樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>請選擇要查看的資料</h1>
+
+    <button onclick="redirectToPage1()">查看個別學生課表</button>
+    <button onclick="redirectToPage2()">查看全部學生總表</button>
+
+    <script>
+        // 函數：轉跳到網頁1
+        function redirectToPage1() {
+            window.location.href = 'ath.html'; // 設定網頁1的URL
+        }
+
+        // 函數：轉跳到網頁2
+        function redirectToPage2() {
+            window.location.href = 'https://docs.google.com/spreadsheets/d/1FRhVgc0kwCc5U-oQl--ygQe38n8oo21KoLHcMccIUaM/edit?usp=sharing'; // 設定網頁2的URL
+        }
+    </script>
+
+</body>
+</html>

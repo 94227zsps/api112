@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>芝山國小專團個別服務時間</title>
+    <style>
+        /* 添加一些基本的樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 90%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #jumpSelect {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>芝山國小專團個別服務時間</h1>
+
+    <label for="jumpSelect">請選擇學生：</label>
+    <select id="jumpSelect"></select>
+
+    <table id="data-table">
+        <!-- 表格頭部將在JavaScript中填充 -->
+        <thead></thead>
+        <!-- 表格內容將在JavaScript中填充 -->
+        <tbody></tbody>
+    </table>
+
+    <script>
+        // 使用JavaScript來動態讀取CSV文件的資料
+        window.onload = function () {
+            // 這裡假設CSV文件名為001.csv，確保文件名正確
+            const csvFilePath = '001.csv';
+
+            // 使用fetch API讀取CSV文件
+            fetch(csvFilePath)
+                .then(response => response.text())
+                .then(data => {
+                    // 將CSV資料轉換為二維陣列
+                    const dataArray = CSVToArray(data);
+
+                    // 獲取表格的thead和tbody元素
+                    const thead = document.querySelector('#data-table thead');
+                    const tbody = document.querySelector('#data-table tbody');
+
+                    // 獲取下拉選單元素
+                    const jumpSelect = document.getElementById('jumpSelect');
+
+                    // 顯示表格頭部
+                    showTableHeader(dataArray[0]);
+
+                    // 填充下拉選單
+                    fillDropdown(dataArray);
+
+                    // 綁定下拉選單變更事件
+                    jumpSelect.addEventListener('change', () => {
+                        const selectedIndex = jumpSelect.selectedIndex;
+                        showTable(dataArray[selectedIndex + 1]);
+                    });
+
+                    // 函數：顯示表格頭部
+                    function showTableHeader(headerData) {
+                        // 清空表格頭部
+                        thead.innerHTML = '';
+
+                        // 填充表格頭部
+                        const headerRow = document.createElement('tr');
+                        headerData.forEach(headerCell => {
+                            const th = document.createElement('th');
+                            th.textContent = headerCell;
+                            headerRow.appendChild(th);
+                        });
+                        thead.appendChild(headerRow);
+                    }
+
+                    // 函數：填充下拉選單
+                    function fillDropdown(dataArray) {
+                        // 遍歷資料，填充下拉選單
+                        dataArray.forEach((rowData, index) => {
+                            if (index === 0) return; // 跳過第一行
+                            const option = document.createElement('option');
+                            option.value = index;
+                            option.textContent = rowData[0];
+                            jumpSelect.appendChild(option);
+                        });
+                    }
+
+                    // 函數：顯示指定資料的表格
+                    function showTable(rowData) {
+                        // 清空表格內容
+                        tbody.innerHTML = '';
+
+                        // 填充表格內容
+                        const dataRow = document.createElement('tr');
+                        rowData.forEach(dataCell => {
+                            const td = document.createElement('td');
+                            td.textContent = dataCell;
+                            dataRow.appendChild(td);
+                        });
+                        tbody.appendChild(dataRow);
+                    }
+                })
+                .catch(error => console.error('讀取CSV文件時發生錯誤：', error));
+        };
+
+        // CSV字符串轉換為二維陣列的函數
+        function CSVToArray(csvString, delimiter = ',') {
+            const lines = csvString.split('\n');
+            return lines.map(line => line.split(delimiter));
+        }
+    </script>
+
+</body>
+</html>
